@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PlayListBuilder playlist = new PlayListBuilder();
-        voicePlaylist = playlist.buildPlaylist(20, this);
+        voicePlaylist = playlist.buildPlaylist(999, this);
         voiceMediaPlayer = MediaPlayer.create(this,voicePlaylist.get(0));
         voiceMediaPlayer.start();
         voicePlayerTimer = new Timer();

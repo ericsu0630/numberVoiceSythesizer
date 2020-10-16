@@ -8,35 +8,36 @@ public class PlayListBuilder {
     public ArrayList<Integer> buildPlaylist(int queueNumber, Context voicePlayerContext){
         //build a playlist based on the queue number
         voicePlaylist = new ArrayList<>();
-        String[] splitNum = String.valueOf(queueNumber).split("");
+        //split the queueNumber string into separate characters
+        char[] splitChar = String.valueOf(queueNumber).toCharArray();
         int rawResourceId;
 
         //loop through each digit in reverse while fetching the audio files
-        for(int digit=splitNum.length-1;digit>=1;digit--){//loop through each digit in reverse
-            rawResourceId = voicePlayerContext.getResources().getIdentifier("ch"+splitNum[digit], "raw", voicePlayerContext.getPackageName());
+        for(int digit=splitChar.length-1;digit>=0;digit--){//loop through each digit in reverse
+            rawResourceId = voicePlayerContext.getResources().getIdentifier("ch"+splitChar[digit], "raw", voicePlayerContext.getPackageName());
             voicePlaylist.add(0,rawResourceId);
         }
         //把 [百] 和 [十] mp3檔加進去
         if(voicePlaylist.size()==3) { //three digit number
             voicePlaylist.add(1, R.raw.ch100);
-            if (splitNum[3].equals("0") && splitNum[2].equals("0")) { //for numbers ending in '00'
+            if (splitChar[2]=='0' && splitChar[1]=='0') { //for numbers ending in '00'
                 //remove "00" from playlist
                 voicePlaylist.remove(voicePlaylist.size() - 1);
                 voicePlaylist.remove(voicePlaylist.size() - 1);
 
-            }else if(splitNum[3].equals("0")){ //for numbers ending in '0' only
+            }else if(splitChar[2]=='0'){ //for numbers ending in '0' only
                 //replace last 0 with ten
                 voicePlaylist.remove(voicePlaylist.size() - 1);
                 voicePlaylist.add(3, R.raw.ch10);
-            }else if(!splitNum[2].equals("0")){ //for all numbers besides 101-109
+            }else if(splitChar[1]!='0'){ //for all numbers besides 101-109
                 voicePlaylist.add(3, R.raw.ch10);
             }
 
         }else if (voicePlaylist.size()==2){ //two digit number
             voicePlaylist.add(1, R.raw.ch10);
-            if(splitNum[1].equals("1")){ //for numbers 10-19
+            if(splitChar[0]=='1'){ //for numbers 10-19
                 voicePlaylist.remove(0);
-            }if(splitNum[2].equals("0")){ //for 20..90
+            }if(splitChar[1]=='0'){ //for 20..90
                 voicePlaylist.remove(voicePlaylist.size() - 1);
             }
         }
